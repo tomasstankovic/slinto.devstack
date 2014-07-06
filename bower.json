@@ -1,0 +1,9 @@
+{
+  "name": "slinto-devstack",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip",
+    "closure-library": "https://github.com/google/closure-library.git"
+  }
+}
