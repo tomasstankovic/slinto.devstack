@@ -39,3 +39,7 @@ Type `gulp server` and open localhost:3000 in your browser.
 ```
 gulp build
 ```
+
+## License
+
+[MIT](http://opensource.org/licenses/MIT) © [Tomáš Stankovič](http://slinto.sk)
