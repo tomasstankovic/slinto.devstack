@@ -30,14 +30,16 @@ npm install && bower install
 ## Workflow
 
 ### Recomended dev workflow
-Run server, nodemon for automatically reload node.js app, livereloading when is jade, js or css changed and run JSHint. Automatic compilation of Stylus code and automatic creating of google deps file.
+> Run server, nodemon for automatically reload node.js app, livereloading when is jade, js or css changed and run JSHint. Automatic compilation of Stylus code and automatic creating of google deps file.
+
 ```
 gulp server
 ```
 Type `gulp server` and open localhost:3000 in your browser.
 
 ### Production build
-Compilation of Stylus code, minifying CSS code, image minifying and run Google Closure Compiler.
+> Compilation of Stylus code, minifying CSS code, image minifying and run Google Closure Compiler.
+
 ```
 gulp build
 ```
