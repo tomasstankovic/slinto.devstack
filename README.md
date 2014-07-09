@@ -44,6 +44,10 @@ Type `gulp server` and open localhost:3000 in your browser.
 gulp build
 ```
 
+### Error: spawn EMFILE on OSX
+Call `ulimit -n 10240` or `gulp set-ulimit`.
+For automatic setup on start, call `gulp server-ulimit` instead `gulp server`
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT) © [Tomáš Stankovič](http://slinto.sk)
