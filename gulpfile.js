@@ -139,5 +139,5 @@ gulp.task('start-server', function() {
   gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
 });
 
-//gulp.task('server', ['set-ulimit', 'start-server']);
+gulp.task('server-ulimit', ['set-ulimit', 'start-server']);
 gulp.task('server', ['start-server']);

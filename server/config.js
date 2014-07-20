@@ -8,9 +8,9 @@ var express = require('express'),
   csrf = require('csurf'),
   session = require('express-session'),
   favicon = require('serve-favicon'),
-  logger = require('morgan'),
   methodOverride = require('method-override'),
   mongoose = require('mongoose'),
+  morgan = require('morgan'),
   path = require('path');
 
 var DEV_ENV = 'development',
@@ -35,8 +35,7 @@ var appSetup = function(app) {
   app.use(bodyParser.urlencoded({extended: true}));
 
   if (CURRENT_ENV === DEV_ENV) {
-    app.use(logger({
-      format: 'dev',
+    app.use(morgan('dev', {
       skip: function(req, res) {
         return res.statusCode === 304;
       }
