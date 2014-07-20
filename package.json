@@ -1,6 +1,6 @@
 {
   "name": "slinto-devstack",
-  "version": "0.1.1npm",
+  "version": "0.1.1",
   "private": true,
   "author": "Tomáš Stankovič <info@slinto.sk> (http://slinto.sk/)",
   "license": "MIT",
