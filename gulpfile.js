@@ -2,7 +2,6 @@ var gulp = require('gulp'),
   changed = require('gulp-changed'),
   closureCompiler = require('gulp-closure-compiler'),
   closureDeps = require('gulp-closure-deps'),
-  imagemin = require('gulp-imagemin'),
   jshint = require('gulp-jshint'),
   livereload = require('gulp-livereload'),
   minifyCSS = require('gulp-minify-css'),
@@ -68,24 +67,12 @@ gulp.task('compile', function() {
 
 gulp.task('deps', function() {
   return gulp.src(paths.scriptsFrontend)
+    .pipe(changed('./build'))
     .pipe(closureDeps({
       fileName: 'deps.js',
       prefix: '../../../..'
     }))
     .pipe(gulp.dest('./build'));
-});
-
-gulp.task('image-min', function() {
-  return gulp.src(paths.images)
-    .pipe(changed('./build/img'))
-    .pipe(imagemin({
-      progressive: true,
-      svgoPlugins: [{
-        removeViewBox: false
-      }]
-    }))
-    .pipe(gulp.dest('./client/img'))
-    .pipe(gulp.dest('./build/img'));
 });
 
 gulp.task('lint', function() {
@@ -103,6 +90,7 @@ gulp.task('minify-css', function() {
 
 gulp.task('stylus', function() {
   return gulp.src(paths.stylus)
+    .pipe(changed('./build/css'))
     .pipe(stylus({
       errors: true,
       use: [nib()]
@@ -121,10 +109,10 @@ gulp.task('set-ulimit', shell.task([
   'ulimit -n 10240'
 ]));
 
-gulp.task('default', ['stylus', 'lint', 'deps', 'image-min']);
+gulp.task('default', ['stylus', 'lint', 'deps']);
 
 gulp.task('build', function() {
-  runSequence('clean', ['stylus', 'image-min'], 'minify-css', 'compile');
+  runSequence('clean', 'stylus', 'minify-css', 'compile');
 });
 
 gulp.task('start-server', function() {
