@@ -1,4 +1,5 @@
-# Slinto DevStack [![Dependency Status](https://david-dm.org/slinto/slinto-devstack.png)](https://david-dm.org/slinto/slinto-devstack) [![devDependency Status](https://david-dm.org/slinto/slinto-devstack/dev-status.png)](https://david-dm.org/slinto/slinto-devstack#info=devDependencies)
+# Slinto DevStack [![Dependency Status](https://david-dm.org/slinto/slinto-devstack.svg?style=flat)](https://david-dm.org/slinto/slinto-devstack) [![devDependency Status](https://david-dm.org/slinto/slinto-devstack/dev-status.svg?style=flat)](https://david-dm.org/slinto/slinto-devstack#info=devDependencies)
+
 
 Slinto DevStack is my simple automated DevStack for creating [Node.js](http://nodejs.org) apps including: 
   - [Google Closure Tools (Library, Compiler)](https://developers.google.com/closure/)
