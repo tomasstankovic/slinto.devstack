@@ -7,6 +7,7 @@ var gulp = require('gulp'),
   minifyCSS = require('gulp-minify-css'),
   nib = require('nib'),
   nodemon = require('gulp-nodemon'),
+  plumber = require('gulp-plumber'),
   rimraf = require('gulp-rimraf'),
   runSequence = require('run-sequence'),
   shell = require('gulp-shell'),
@@ -90,6 +91,7 @@ gulp.task('minify-css', function() {
 
 gulp.task('stylus', function() {
   return gulp.src(paths.stylus)
+    .pipe(plumber())
     .pipe(changed('./build/css'))
     .pipe(stylus({
       errors: true,
