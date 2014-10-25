@@ -8,7 +8,8 @@ var gulp = require('gulp'),
   minifyCSS = require('gulp-minify-css'),
   nib = require('nib'),
   nodemon = require('gulp-nodemon'),
-  notify = require("gulp-notify"),
+  notify = require('gulp-notify'),
+  osName = require('os-name'),
   plumber = require('gulp-plumber'),
   pngcrush = require('imagemin-pngcrush'),
   rimraf = require('gulp-rimraf'),
@@ -76,7 +77,6 @@ gulp.task('compile', function() {
 
 gulp.task('deps', function() {
   return gulp.src(paths.scriptsFrontend)
-    .pipe(changed('./build'))
     .pipe(closureDeps({
       fileName: 'deps.js',
       prefix: '../../../..'
@@ -140,7 +140,7 @@ gulp.task('set-ulimit', shell.task([
   'ulimit -n 10240'
 ]));
 
-gulp.task('default', ['stylus', 'jshint', 'deps']);
+gulp.task('dev', ['stylus', 'jshint', 'deps']);
 
 gulp.task('build', function() {
   runSequence('clean', 'stylus', 'minify-css', 'compile');
@@ -158,5 +158,5 @@ gulp.task('start-server', function() {
   gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
 });
 
-gulp.task('server-ulimit', ['set-ulimit', 'start-server']);
-gulp.task('server', ['start-server']);
+gulp.task('server', ['dev', 'start-server']);
+gulp.task('default', ['set-ulimit', 'dev', 'start-server']);
