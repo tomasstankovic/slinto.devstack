@@ -7,6 +7,7 @@ var gulp = require('gulp'),
   minifyCSS = require('gulp-minify-css'),
   nib = require('nib'),
   nodemon = require('gulp-nodemon'),
+  notify = require("gulp-notify"),
   plumber = require('gulp-plumber'),
   rimraf = require('gulp-rimraf'),
   runSequence = require('run-sequence'),
@@ -27,6 +28,11 @@ var paths = {
   stylus: ['./client/css/app.styl'],
   css: ['./build/css/app.css']
 };
+
+var errorNotify = notify.onError({
+  message: "Error: <%= error.message %>",
+  title: "<%= error.plugin %> error!"
+});
 
 gulp.task('clean', function() {
   return gulp.src(['./build/js', './build/css', './build/deps.js'], { read: false })
@@ -79,19 +85,23 @@ gulp.task('deps', function() {
 gulp.task('lint', function() {
   return gulp.src(paths.scripts)
     .pipe(jshint())
+    .pipe(plumber({
+      errorHandler: errorNotify
+    }))
     .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('minify-css', function() {
   return gulp.src(paths.css)
-    .pipe(changed('./build/css'))
     .pipe(minifyCSS())
     .pipe(gulp.dest('./build/css'));
 });
 
 gulp.task('stylus', function() {
   return gulp.src(paths.stylus)
-    .pipe(plumber())
+    .pipe(plumber({
+      errorHandler: errorNotify
+    }))
     .pipe(changed('./build/css'))
     .pipe(stylus({
       errors: true,
