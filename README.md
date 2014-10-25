@@ -9,6 +9,7 @@ Slinto DevStack is my simple automated DevStack for creating [Node.js](http://no
   - [Jade - Template Engine](http://jade-lang.com/)
   - [Mongoose](http://mongoosejs.com/)
   - [Nodemon](http://nodemon.io/)
+  - CSS3 Autoprefixer
   - Image minifier
   - JSHint
   - Livereloading (Good with [Google Chrome Extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei))
