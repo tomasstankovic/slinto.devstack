@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+  autoprefixer = require('gulp-autoprefixer'),
   changed = require('gulp-changed'),
   closureCompiler = require('gulp-closure-compiler'),
   closureDeps = require('gulp-closure-deps'),
@@ -121,11 +122,11 @@ gulp.task('stylus', function() {
     .pipe(plumber({
       errorHandler: errorNotify
     }))
-    .pipe(changed('./build/css'))
     .pipe(stylus({
       errors: true,
       use: [nib()]
     }))
+    .pipe(autoprefixer(['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie 8', 'ie 9']))
     .pipe(size({
       showFiles: true
     }))

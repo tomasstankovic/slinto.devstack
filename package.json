@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "gulp": "^3.8.7",
+    "gulp-autoprefixer": "^1.0.1",
     "gulp-changed": "^1.0.0",
     "gulp-closure-compiler": "^0.2.4",
     "gulp-closure-deps": "^0.3.1",
