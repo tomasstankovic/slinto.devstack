@@ -15,7 +15,7 @@ Slinto DevStack is my simple automated DevStack for creating [Node.js](http://no
 
 
 ## Prerequisites
-[Node.js](http://nodejs.org)
+[Node.js](http://nodejs.org) && Java 1.7+
 ```
 npm install -g gulp
 npm install -g bower
