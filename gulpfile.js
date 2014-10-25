@@ -2,6 +2,7 @@ var gulp = require('gulp'),
   changed = require('gulp-changed'),
   closureCompiler = require('gulp-closure-compiler'),
   closureDeps = require('gulp-closure-deps'),
+  imagemin = require('gulp-imagemin'),
   jshint = require('gulp-jshint'),
   livereload = require('gulp-livereload'),
   minifyCSS = require('gulp-minify-css'),
@@ -9,6 +10,7 @@ var gulp = require('gulp'),
   nodemon = require('gulp-nodemon'),
   notify = require("gulp-notify"),
   plumber = require('gulp-plumber'),
+  pngcrush = require('imagemin-pngcrush'),
   rimraf = require('gulp-rimraf'),
   runSequence = require('run-sequence'),
   shell = require('gulp-shell'),
@@ -82,11 +84,28 @@ gulp.task('deps', function() {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('lint', function() {
+gulp.task('imagemin', function () {
+  return gulp.src(paths.images)
+    .pipe(imagemin({
+      use: [pngcrush()]
+  }))
+  .pipe(gulp.dest('./build/img'));
+});
+
+gulp.task('jshint', function() {
   return gulp.src(paths.scripts)
     .pipe(jshint())
-    .pipe(plumber({
-      errorHandler: errorNotify
+    .pipe(notify(function (file) {
+      if (file.jshint.success) {
+        return false;
+      }
+
+      var errors = file.jshint.results.map(function (data) {
+        if (data.error) {
+          return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+        }
+      }).join("\n");
+      return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
     }))
     .pipe(jshint.reporter('jshint-stylish'));
 });
@@ -121,7 +140,7 @@ gulp.task('set-ulimit', shell.task([
   'ulimit -n 10240'
 ]));
 
-gulp.task('default', ['stylus', 'lint', 'deps']);
+gulp.task('default', ['stylus', 'jshint', 'deps']);
 
 gulp.task('build', function() {
   runSequence('clean', 'stylus', 'minify-css', 'compile');
@@ -131,11 +150,11 @@ gulp.task('start-server', function() {
   nodemon({
     script: 'server/app.js',
     watch: ['server/**/*.js']
-  }).on('change', ['lint']);
+  }).on('change', ['jshint']);
 
   livereload.listen();
   gulp.watch(['client/css/**/*.styl'], ['stylus']);
-  gulp.watch(['client/js/**/*.js'], ['lint', 'deps']);
+  gulp.watch(['client/js/**/*.js'], ['jshint', 'deps']);
   gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
 });
 
