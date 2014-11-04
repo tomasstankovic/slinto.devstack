@@ -7,6 +7,7 @@ var gulp = require('gulp'),
   jshint = require('gulp-jshint'),
   livereload = require('gulp-livereload'),
   minifyCSS = require('gulp-minify-css'),
+  mocha = require('gulp-mocha'),
   nib = require('nib'),
   nodemon = require('gulp-nodemon'),
   notify = require('gulp-notify'),
@@ -140,21 +141,29 @@ gulp.task('set-ulimit', shell.task([
   'ulimit -n 10240'
 ]));
 
-gulp.task('dev', ['stylus', 'jshint', 'deps']);
+gulp.task('test', function () {
+  return gulp.src('test/**/*.js', {read: false})
+    .pipe(mocha({
+      reporter: 'spec'
+    }));
+});
+
+gulp.task('dev', ['stylus', 'jshint', 'test', 'deps']);
 
 gulp.task('build', function() {
-  runSequence('clean', 'stylus', 'minify-css', 'compile');
+  runSequence('clean', 'stylus', 'minify-css', 'test', 'compile');
 });
 
 gulp.task('start-server', function() {
   nodemon({
     script: 'server/app.js',
     watch: ['server/**/*.js']
-  }).on('change', ['jshint']);
+  }).on('change', ['jshint', 'test']);
 
   livereload.listen();
   gulp.watch(['client/css/**/*.styl'], ['stylus']);
-  gulp.watch(['client/js/**/*.js'], ['jshint', 'deps']);
+  gulp.watch(['client/js/**/*.js'], ['jshint', 'test', 'deps']);
+  gulp.watch(['test/**/*.js'], ['test']);
   gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
 });
 
