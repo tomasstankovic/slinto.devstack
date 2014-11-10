@@ -151,7 +151,12 @@ gulp.task('test', function () {
 gulp.task('dev', ['stylus', 'jshint', 'test', 'deps']);
 
 gulp.task('build', function() {
-  runSequence('clean', 'stylus', 'minify-css', 'test', 'compile');
+  runSequence('clean', 'stylus', 'minify-css', 'image-copy', 'test', 'compile');
+});
+
+gulp.task('image-copy', function() {
+  return gulp.src(paths.images)
+    .pipe(gulp.dest('./build/img'));
 });
 
 gulp.task('start-server', function() {
@@ -165,6 +170,7 @@ gulp.task('start-server', function() {
   gulp.watch(['client/js/**/*.js'], ['jshint', 'test', 'deps']);
   gulp.watch(['test/**/*.js'], ['test']);
   gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
+  gulp.watch(['client/img/**/*.png'], ['image-copy']);
 });
 
 gulp.task('server', ['dev', 'start-server']);
