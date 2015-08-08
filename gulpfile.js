@@ -1,114 +1,61 @@
 var gulp = require('gulp'),
+  args = require('yargs').argv,
   autoprefixer = require('gulp-autoprefixer'),
-  changed = require('gulp-changed'),
-  closureCompiler = require('gulp-closure-compiler'),
-  closureDeps = require('gulp-closure-deps'),
+  bump = require('gulp-bump'),
   imagemin = require('gulp-imagemin'),
-  jshint = require('gulp-jshint'),
   livereload = require('gulp-livereload'),
   minifyCSS = require('gulp-minify-css'),
   mocha = require('gulp-mocha'),
   nib = require('nib'),
   nodemon = require('gulp-nodemon'),
-  notify = require('gulp-notify'),
   plumber = require('gulp-plumber'),
-  pngcrush = require('imagemin-pngcrush'),
   rimraf = require('gulp-rimraf'),
   runSequence = require('run-sequence'),
   shell = require('gulp-shell'),
   size = require('gulp-size'),
-  stylus = require('gulp-stylus');
+  stylus = require('gulp-stylus'),
+  git = require('gulp-git'),
+  uglify = require('gulp-uglify'),
+  pngquant = require('imagemin-pngquant'),
+  webpack = require('gulp-webpack'),
+  webpackLib = require('webpack');
+
+var VERSION;
 
 var paths = {
-  scriptsFrontend: [
-    './bower_components/closure-library/closure/goog/**/*.js',
-    './client/js/**/*.js'
-  ],
+  scriptsFrontend: ['./client/js/**/*.js'],
   scripts: [
     './client/js/**/*.js',
+    '!./client/js/lib/**/*.js',
+    '!./client/js/bower_components/**/*.js',
     './server/**/*.js'
   ],
-  images: ['./client/img/*'],
+  images: './client/img/**/*.{png,jpg,jpeg,gif}',
   stylus: ['./client/css/app.styl'],
   css: ['./build/css/app.css']
 };
 
-var errorNotify = notify.onError({
-  message: "Error: <%= error.message %>",
-  title: "<%= error.plugin %> error!"
-});
-
 gulp.task('clean', function() {
-  return gulp.src(['./build/js', './build/css', './build/deps.js'], { read: false })
-    .pipe(rimraf({ force: true }));
+  return gulp.src(['./build/js', './build/css', './build/deps.js'], {
+      read: false
+    })
+    .pipe(rimraf({
+      force: true
+    }));
 });
 
-gulp.task('clean-all', function() {
-  return gulp.src('./build', { read: false })
-    .pipe(rimraf({ force: true }));
-});
-
-gulp.task('compile', function() {
-  return gulp.src(paths.scriptsFrontend)
-    .pipe(closureCompiler({
-      compilerPath: './bower_components/closure-compiler/compiler.jar',
-      fileName: 'build.js',
-      compilerFlags: {
-        closure_entry_point: 'slinto.app',
-        compilation_level: 'ADVANCED_OPTIMIZATIONS',
-        define: [
-          "goog.DEBUG=false"
-        ],
-        //debug: true,
-        //formatting: 'PRETTY_PRINT',
-        only_closure_dependencies: true,
-        output_wrapper: '(function(){%output%})();',
-        warning_level: 'VERBOSE'
-      }
-    }))
-    .pipe(size({
-      showFiles: true
-    }))
-    .pipe(size({
-      showFiles: true,
-      gzip: true
-    }))
-    .pipe(gulp.dest('./build/js'));
-});
-
-gulp.task('deps', function() {
-  return gulp.src(paths.scriptsFrontend)
-    .pipe(closureDeps({
-      fileName: 'deps.js',
-      prefix: '../../../..'
-    }))
-    .pipe(gulp.dest('./build'));
-});
-
-gulp.task('imagemin', function () {
+gulp.task('imagemin', function() {
   return gulp.src(paths.images)
     .pipe(imagemin({
-      use: [pngcrush()]
-  }))
-  .pipe(gulp.dest('./build/img'));
+      progressive: true,
+      use: [pngquant()]
+    }))
+    .pipe(gulp.dest('./build/img'));
 });
 
-gulp.task('jshint', function() {
-  return gulp.src(paths.scripts)
-    .pipe(jshint())
-    .pipe(notify(function (file) {
-      if (file.jshint.success) {
-        return false;
-      }
-
-      var errors = file.jshint.results.map(function (data) {
-        if (data.error) {
-          return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
-        }
-      }).join("\n");
-      return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
-    }))
-    .pipe(jshint.reporter('jshint-stylish'));
+gulp.task('image-copy', function() {
+  return gulp.src(paths.images)
+    .pipe(gulp.dest('./build/img'));
 });
 
 gulp.task('minify-css', function() {
@@ -119,9 +66,7 @@ gulp.task('minify-css', function() {
 
 gulp.task('stylus', function() {
   return gulp.src(paths.stylus)
-    .pipe(plumber({
-      errorHandler: errorNotify
-    }))
+    .pipe(plumber())
     .pipe(stylus({
       errors: true,
       use: [nib()]
@@ -141,36 +86,113 @@ gulp.task('set-ulimit', shell.task([
   'ulimit -n 10240'
 ]));
 
-gulp.task('test', function () {
-  return gulp.src('test/**/*.js', {read: false})
+gulp.task('test', function() {
+  return gulp.src('test/**/*.test.js', {
+      read: false
+    })
     .pipe(mocha({
       reporter: 'spec'
     }));
 });
 
-gulp.task('dev', ['stylus', 'jshint', 'test', 'deps']);
-
-gulp.task('build', function() {
-  runSequence('clean', 'stylus', 'minify-css', 'image-copy', 'test', 'compile');
+gulp.task('test-deployed', function() {
+  return gulp.src('test/**/*.test.js', {
+      read: false
+    })
+    .pipe(mocha({
+      reporter: 'spec'
+    }))
+    .once('end', function() {
+      process.exit();
+    });
 });
 
-gulp.task('image-copy', function() {
-  return gulp.src(paths.images)
-    .pipe(gulp.dest('./build/img'));
+gulp.task('uglify', function() {
+  return gulp.src('./build/js/build-dev.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./build/js'));
+});
+
+gulp.task('webpack', function() {
+  return gulp.src('./client/js/main.js')
+    .pipe(webpack({
+      output: {
+        filename: 'build-dev.js'
+      },
+      plugins: (function() {
+        var plugins = [];
+        plugins.push(
+          new webpackLib.optimize.DedupePlugin(),
+          new webpackLib.optimize.OccurenceOrderPlugin(),
+          new webpackLib.ContextReplacementPlugin(/moment[\/\\]locale$/, /en|sk/),
+          new webpackLib.optimize.UglifyJsPlugin({
+            compress: {
+              warnings: false
+            }
+          })
+        );
+        return plugins;
+      })(),
+      modulesDirectories: ['app/bower_components']
+    }))
+    .pipe(gulp.dest('./build/js/'));
+});
+
+gulp.task('git-commit', function() {
+  var packageJSON = require('./package.json');
+  return gulp.src(['./build/*', './package.json', './bower.json'])
+    .pipe(git.add({
+      args: '-A'
+    }))
+    .pipe(git.commit('Release v' + packageJSON.version));
+});
+
+gulp.task('git-push', function() {
+  return git.push('origin', 'master', function(err) {
+    if (err) {
+      throw err;
+    }
+    process.exit();
+  });
+});
+
+gulp.task('bump', function() {
+  return gulp.src(['./bower.json', './package.json'])
+    .pipe(bump({
+      type: VERSION
+    }))
+    .pipe(gulp.dest('./'));
+});
+
+gulp.task('dev', ['stylus', 'minify-css', 'test']);
+
+gulp.task('build', function() {
+  runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'uglify', 'imagemin');
+});
+
+gulp.task('release', function() {
+  VERSION = args.v || args.version;
+
+  if (typeof VERSION !== 'undefined') {
+    runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'uglify', 'imagemin', 'bump', 'git-commit', 'git-push');
+  } else {
+    console.log('SORRY, app --version parameter missing.');
+  }
 });
 
 gulp.task('start-server', function() {
   nodemon({
     script: 'server/app.js',
     watch: ['server/**/*.js']
-  }).on('change', ['jshint', 'test']);
+  }).on('start');
 
   livereload.listen();
-  gulp.watch(['client/css/**/*.styl'], ['stylus']);
-  gulp.watch(['client/js/**/*.js'], ['jshint', 'test', 'deps']);
+  gulp.watch(['client/css/**/*.styl'], ['stylus', 'minify-css']);
+  gulp.watch(['client/js/**/*.js', '!./client/js/bower_components/**/*.js', '!/client/js/build.js'], ['webpack', 'uglify']);
   gulp.watch(['test/**/*.js'], ['test']);
-  gulp.watch(['build/**', 'server/views/**/*.jade']).on('change', livereload.changed);
-  gulp.watch(['client/img/**/*.png'], ['image-copy']);
+  gulp.watch(['build/css/app.css', 'build/img/**', 'server/views/**/*.jade']).on('change', livereload.changed);
+  gulp.watch(['build/js/build-dev.js']).on('change', livereload.reload);
+  gulp.watch(['client/img/**/*'], ['image-copy']);
 });
 
 gulp.task('server', ['dev', 'start-server']);

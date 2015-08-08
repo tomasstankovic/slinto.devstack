@@ -1,5 +1,3 @@
-goog.provide('slinto.app');
+var hello = require('./modules/hello.js');
 
-goog.require('goog.dom');
-
-console.log('Hello Closure!');
+hello.init();

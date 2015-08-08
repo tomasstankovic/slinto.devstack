@@ -1,6 +1,11 @@
-extends layout
+doctype html
+html
+  head
+    include head
+  body
+    h1 WHOOOOOOP! #{status} error
 
-block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+    if (CURRENT_ENV == 'DEVELOPMENT') 
+      p DEV_ONLY: #{message}
+        
+    a(href='/') <strong>#{__('Back')}</strong> #{__('to homepage!')}

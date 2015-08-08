@@ -1,7 +1,10 @@
 if title
-  title #{title} | Slinto DevStack
+  title #{title} | slinto DevStack
 else
-  title Slinto DevStack
+  title slinto DevStack
 
 meta(name='viewport' content='width=device-width, initial-scale=1.0')
 link(rel='stylesheet' href='/build/css/app.css')
+
+script.
+  var ACTUAL_LOCALE = '#{locale}';

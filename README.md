@@ -1,9 +1,12 @@
-# Slinto DevStack [![Dependency Status](https://david-dm.org/slinto/slinto-devstack.svg?style=flat)](https://david-dm.org/slinto/slinto-devstack) [![devDependency Status](https://david-dm.org/slinto/slinto-devstack/dev-status.svg?style=flat)](https://david-dm.org/slinto/slinto-devstack#info=devDependencies)
+# Slinto DevStack
+[![Dependency Status](https://david-dm.org/slinto/slinto.devstack.png)](https://david-dm.org/slinto/slinto.devstack)
+[![DevDependency Status](https://david-dm.org/slinto/slinto.devstack/dev-status.png)](https://david-dm.org/slinto/slinto.devstack#info=devDependencies)
 
 
 Slinto DevStack is my simple automated DevStack for creating [Node.js](http://nodejs.org) apps including:
-  - [Google Closure Tools (Library, Compiler)](https://developers.google.com/closure/)
+
   - [Express - web application framework for node](http://expressjs.com/)
+  - [Webpack - Module bundler](http://webpack.github.io/)
   - [Stylus — expressive, robust, feature-rich CSS preprocessor](http://learnboost.github.io/stylus/)
   - [nib - CSS3 extensions for Stylus](http://visionmedia.github.io/nib/)
   - [Jade - Template Engine](http://jade-lang.com/)
@@ -12,12 +15,11 @@ Slinto DevStack is my simple automated DevStack for creating [Node.js](http://no
   - [Mocha - test framework](http://mochajs.org/)
   - CSS3 Autoprefixer
   - Image minifier
-  - JSHint
   - Livereloading (Good with [Google Chrome Extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei))
 
 
 ## Prerequisites
-[Node.js](http://nodejs.org) && Java 1.7+
+[Node.js](http://nodejs.org)
 ```
 npm install -g gulp
 npm install -g bower
@@ -38,13 +40,22 @@ npm install && bower install
 ```
 gulp
 ```
-Type `gulp` or `gulp server` and open localhost:3000 in your browser.
+Type `gulp` or `gulp server` and open localhost:8080 in your browser.
 
 ### Production build
 > Compilation of Stylus code, minifying CSS code, image minifying and run Google Closure Compiler.
 
 ```
 gulp build
+```
+
+### Release build
+> App building, version bump, commit and push to git repository.
+
+```
+gulp release --version major|minor|patch
+or
+gulp release -v major|minor|patch
 ```
 
 ### Error: spawn EMFILE on OSX

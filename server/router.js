@@ -1,10 +1,10 @@
 /**
  * App router.
  */
-var mainController = require('./controllers/mainController');
-
 var setup = function(app) {
-  app.use('/', mainController);
+  var staticController = require('./controllers/staticController');
+
+  app.use('/', staticController);
 };
 
 module.exports.setup = setup;
