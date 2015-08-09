@@ -1,4 +1,4 @@
-# Slinto DevStack
+![slinto.devstack()](http://data.slinto.sk/slinto-devstack.png)
 [![Dependency Status](https://david-dm.org/slinto/slinto.devstack.png)](https://david-dm.org/slinto/slinto.devstack)
 [![DevDependency Status](https://david-dm.org/slinto/slinto.devstack/dev-status.png)](https://david-dm.org/slinto/slinto.devstack#info=devDependencies)
 
