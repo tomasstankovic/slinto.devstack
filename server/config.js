@@ -19,7 +19,8 @@ var express = require('express'),
 var DEV_ENV = 'DEVELOPMENT',
   CURRENT_ENV = process.env.NODE_ENV || DEV_ENV,
   APP_VER = pjson.version,
-  port = process.env.PORT || 8080;
+  port = process.env.PORT || 8080,
+  DB_URL = 'db_url_here';
 
 /**
  * Basic app setup.
