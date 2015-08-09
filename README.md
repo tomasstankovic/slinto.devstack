@@ -15,6 +15,7 @@ Slinto DevStack is my simple automated DevStack for creating [Node.js](http://no
   - [Mocha - test framework](http://mochajs.org/)
   - CSS3 Autoprefixer
   - Image minifier
+  - i18n
   - Livereloading (Good with [Google Chrome Extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei))
 
 
