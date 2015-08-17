@@ -10,7 +10,6 @@ var express = require('express'),
   flash = require('connect-flash'),
   methodOverride = require('method-override'),
   mongoose = require('mongoose'),
-  passport = require('passport'),
   path = require('path'),
   i18n = require('i18n'),
   router = require('./router'),
@@ -95,7 +94,7 @@ var appSetup = function(app) {
     }));
   }
 
-  router.setup(app, passport);
+  router.setup(app);
 };
 
 /**
