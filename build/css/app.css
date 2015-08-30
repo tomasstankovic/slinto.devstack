@@ -1,4 +1,3 @@
-/* normalize.css v3.0.1 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif; /* 1 */
   -ms-text-size-adjust: 100%; /* 2 */
@@ -279,3 +278,5 @@ a {
 .header {
   background: #0083e9;
 }
+
+/*# sourceMappingURL=app.css.map */

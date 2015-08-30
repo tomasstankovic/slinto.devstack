@@ -67,7 +67,8 @@ gulp.task('stylus', function() {
     .pipe(plumber())
     .pipe(stylus({
       errors: true,
-      use: [nib()]
+      use: [nib()],
+      'include css': true
     }))
     .pipe(autoprefixer(['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie 8', 'ie 9']))
     .pipe(size({
