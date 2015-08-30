@@ -56,12 +56,6 @@ gulp.task('image-copy', function() {
     .pipe(gulp.dest('./build/img'));
 });
 
-gulp.task('minify-css', function() {
-  return gulp.src(paths.css)
-    .pipe(minifyCSS())
-    .pipe(gulp.dest('./build/css'));
-});
-
 gulp.task('stylus', function() {
   return gulp.src(paths.stylus)
     .pipe(plumber())
@@ -71,6 +65,7 @@ gulp.task('stylus', function() {
       'include css': true
     }))
     .pipe(autoprefixer(['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie 8', 'ie 9']))
+    .pipe(minifyCSS())
     .pipe(size({
       showFiles: true
     }))
@@ -138,17 +133,17 @@ gulp.task('bump', function() {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('dev', ['stylus', 'minify-css', 'test']);
+gulp.task('dev', ['stylus', 'test']);
 
 gulp.task('build', function() {
-  runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'imagemin');
+  runSequence('clean', 'stylus', 'test', 'webpack', 'imagemin');
 });
 
 gulp.task('release', function() {
   VERSION = args.v || args.version;
 
   if (typeof VERSION !== 'undefined') {
-    runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'imagemin', 'bump', 'git-commit', 'git-push');
+    runSequence('clean', 'stylus', 'test', 'webpack', 'imagemin', 'bump', 'git-commit', 'git-push');
   } else {
     console.log('SORRY, app --version parameter missing.');
   }
