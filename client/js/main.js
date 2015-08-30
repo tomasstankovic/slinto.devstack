@@ -1,3 +1,7 @@
-var hello = require('./modules/hello.js');
+//var hello = require('./modules/hello.js');
 
-hello.init();
+import Hello from './modules/hello';
+
+var hello = new Hello();
+
+hello.getGreeting();

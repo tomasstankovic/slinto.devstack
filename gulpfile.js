@@ -15,10 +15,8 @@ var gulp = require('gulp'),
   size = require('gulp-size'),
   stylus = require('gulp-stylus'),
   git = require('gulp-git'),
-  uglify = require('gulp-uglify'),
   pngquant = require('imagemin-pngquant'),
-  webpack = require('gulp-webpack'),
-  webpackLib = require('webpack');
+  webpack = require('gulp-webpack');
 
 var VERSION;
 
@@ -107,34 +105,9 @@ gulp.task('test-deployed', function() {
     });
 });
 
-gulp.task('uglify', function() {
-  return gulp.src('./build/js/build-dev.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('./build/js'));
-});
-
 gulp.task('webpack', function() {
   return gulp.src('./client/js/main.js')
-    .pipe(webpack({
-      output: {
-        filename: 'build-dev.js'
-      },
-      plugins: (function() {
-        var plugins = [];
-        plugins.push(
-          new webpackLib.optimize.DedupePlugin(),
-          new webpackLib.optimize.OccurenceOrderPlugin(),
-          new webpackLib.ContextReplacementPlugin(/moment[\/\\]locale$/, /en|sk/),
-          new webpackLib.optimize.UglifyJsPlugin({
-            compress: {
-              warnings: false
-            }
-          })
-        );
-        return plugins;
-      })(),
-      modulesDirectories: ['app/bower_components']
-    }))
+    .pipe(webpack(require("./webpack.config.js")))
     .pipe(gulp.dest('./build/js/'));
 });
 
@@ -167,14 +140,14 @@ gulp.task('bump', function() {
 gulp.task('dev', ['stylus', 'minify-css', 'test']);
 
 gulp.task('build', function() {
-  runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'uglify', 'imagemin');
+  runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'imagemin');
 });
 
 gulp.task('release', function() {
   VERSION = args.v || args.version;
 
   if (typeof VERSION !== 'undefined') {
-    runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'uglify', 'imagemin', 'bump', 'git-commit', 'git-push');
+    runSequence('clean', 'stylus', 'minify-css', 'test', 'webpack', 'imagemin', 'bump', 'git-commit', 'git-push');
   } else {
     console.log('SORRY, app --version parameter missing.');
   }
@@ -188,7 +161,7 @@ gulp.task('start-server', function() {
 
   livereload.listen();
   gulp.watch(['client/css/**/*.styl'], ['stylus', 'minify-css']);
-  gulp.watch(['client/js/**/*.js', '!./client/js/bower_components/**/*.js', '!/client/js/build.js'], ['webpack', 'uglify']);
+  gulp.watch(['client/js/**/*.js', '!./client/js/bower_components/**/*.js', '!/client/js/build.js'], ['webpack']);
   gulp.watch(['test/**/*.js'], ['test']);
   gulp.watch(['build/css/app.css', 'build/img/**', 'server/views/**/*.jade']).on('change', livereload.changed);
   gulp.watch(['build/js/build-dev.js']).on('change', livereload.reload);
