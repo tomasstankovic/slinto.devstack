@@ -1,20 +1,16 @@
 /**
  * Main app start point.
  */
-var express = require('express');
-  prettyError = require('pretty-error').start();
+import express from 'express';
+const app = express();
 
-var app = express();
-
-prettyError.skipNodeFiles();
-prettyError.skipPackage('express');
-
-var config = require('./config'),
-  error = require('./lib/error_handler');
+import * as config from './config';
+import * as error from './lib/error_handler';
 
 config.appSetup(app);
 //config.dbConnect();
 error.setup(app);
-app.listen(config.port, function() {
+
+app.listen(config.port, () => {
   console.log('Listening on port %d', config.port);
 });

@@ -1,1 +1,1 @@
-web: node server/app.js
+web: babel-node server/app.js

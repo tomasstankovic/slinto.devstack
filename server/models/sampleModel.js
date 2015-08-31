@@ -1,7 +1,7 @@
 /**
- * Sport model.
+ * Sample model.
  */
-var mongoose = require('mongoose');
+import mongoose as 'mongoose';
 
 var sampleModel = new mongoose.Schema({
   title: {
@@ -10,4 +10,4 @@ var sampleModel = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('sample', userModel);
+export default mongoose.model('sample', userModel);

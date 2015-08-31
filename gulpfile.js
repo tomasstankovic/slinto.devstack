@@ -142,7 +142,7 @@ gulp.task('build', function() {
 gulp.task('release', function() {
   VERSION = args.v || args.version;
 
-  if (typeof VERSION !== 'undefined') {
+  if (typeof VbaERSION !== 'undefined') {
     runSequence('clean', 'stylus', 'test', 'webpack', 'imagemin', 'bump', 'git-commit', 'git-push');
   } else {
     console.log('SORRY, app --version parameter missing.');
@@ -152,11 +152,12 @@ gulp.task('release', function() {
 gulp.task('start-server', function() {
   nodemon({
     script: 'server/app.js',
+    exec: 'babel-node',
     watch: ['server/**/*.js']
   }).on('start');
 
   livereload.listen();
-  gulp.watch(['client/css/**/*.styl'], ['stylus', 'minify-css']);
+  gulp.watch(['client/css/**/*.styl'], ['stylus']);
   gulp.watch(['client/js/**/*.js', '!./client/js/bower_components/**/*.js', '!/client/js/build.js'], ['webpack']);
   gulp.watch(['test/**/*.js'], ['test']);
   gulp.watch(['build/css/app.css', 'build/img/**', 'server/views/**/*.jade']).on('change', livereload.changed);

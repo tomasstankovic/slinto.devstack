@@ -1,14 +1,14 @@
 /**
  * Statics router.
  */
-var express = require('express'),
-  router = express.Router();
+import express from 'express';
+const router = express.Router();
 
 /**
  * GET: Index
  */
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   res.render('static/index');
 });
 
-module.exports = router;
+export default router;

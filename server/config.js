@@ -15,17 +15,18 @@ var express = require('express'),
   router = require('./router'),
   pjson = require('../package.json');
 
-var DEV_ENV = 'DEVELOPMENT',
-  CURRENT_ENV = process.env.NODE_ENV || DEV_ENV,
+const DEV_ENV = 'DEVELOPMENT',
   APP_VER = pjson.version,
-  port = process.env.PORT || 8080,
   DB_URL = 'db_url_here';
+
+export const CURRENT_ENV = process.env.NODE_ENV || DEV_ENV;
+export const port = process.env.PORT || 8080;
 
 /**
  * Basic app setup.
  * @param {Object} app Express object
  */
-var appSetup = function(app) {
+export function appSetup(app) {
   app.locals.CURRENT_ENV = CURRENT_ENV;
   app.locals.APP_VER = APP_VER;
   app.set('view engine', 'jade');
@@ -94,13 +95,13 @@ var appSetup = function(app) {
     }));
   }
 
-  router.setup(app);
+  router(app);
 };
 
 /**
  * Database connection.
  */
-var dbConnect = function() {
+export function dbConnect() {
   mongoose.connect(DB_URL, function(err) {
     if (err) {
       console.log('MongoDB: Connecting error : ' + err);
@@ -108,11 +109,4 @@ var dbConnect = function() {
       console.log('MongoDB: Succeeded connected!');
     }
   });
-};
-
-module.exports = {
-  CURRENT_ENV: CURRENT_ENV,
-  port: port,
-  dbConnect: dbConnect,
-  appSetup: appSetup
 };
