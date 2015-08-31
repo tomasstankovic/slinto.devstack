@@ -142,7 +142,7 @@ gulp.task('build', function() {
 gulp.task('release', function() {
   VERSION = args.v || args.version;
 
-  if (typeof VbaERSION !== 'undefined') {
+  if (typeof VERSION !== 'undefined') {
     runSequence('clean', 'stylus', 'test', 'webpack', 'imagemin', 'bump', 'git-commit', 'git-push');
   } else {
     console.log('SORRY, app --version parameter missing.');
