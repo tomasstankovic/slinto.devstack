@@ -7,6 +7,7 @@ Slinto DevStack is my simple automated DevStack for creating [Node.js](http://no
 
   - [Express - web application framework for node](http://expressjs.com/)
   - [Webpack - Module bundler](http://webpack.github.io/)
+  - [Babel - Next generation JavaScript ES2015+](http://babeljs.io/)
   - [Stylus — expressive, robust, feature-rich CSS preprocessor](http://learnboost.github.io/stylus/)
   - [nib - CSS3 extensions for Stylus](http://visionmedia.github.io/nib/)
   - [Jade - Template Engine](http://jade-lang.com/)
