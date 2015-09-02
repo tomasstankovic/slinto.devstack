@@ -8,7 +8,7 @@ module.exports = {
   },
   devtool: "source-map",
   output: {
-    filename: 'build-dev.js'
+    filename: 'build.js'
   },
   plugins: (function() {
     return [

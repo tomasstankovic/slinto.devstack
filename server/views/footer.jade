@@ -10,7 +10,4 @@ p.
   <br/>
   #{__('Version')}: #{APP_VER}
 
-if CURRENT_ENV !== 'PRODUCTION'
-  script(src='/build/js/build-dev.js?ver=#{APP_VER}')
-else 
-  script(src='/build/js/build.js?ver=#{APP_VER}')
+script(src='/build/js/build.js?ver=#{APP_VER}')
