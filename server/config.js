@@ -17,7 +17,7 @@ var express = require('express'),
 
 const DEV_ENV = 'DEVELOPMENT',
   APP_VER = pjson.version,
-  DB_URL = 'db_url_here';
+  DB_URL = process.env.DB_URL || 'db_url_here';
 
 export const CURRENT_ENV = process.env.NODE_ENV || DEV_ENV;
 export const port = process.env.PORT || 8080;
