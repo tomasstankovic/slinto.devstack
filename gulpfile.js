@@ -64,7 +64,7 @@ gulp.task('stylus', function() {
       use: [nib()],
       'include css': true
     }))
-    .pipe(autoprefixer(['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1', 'ie 8', 'ie 9']))
+    .pipe(autoprefixer(['> 1%', 'last 2 versions', 'ie 8', 'ie 9']))
     .pipe(minifyCSS())
     .pipe(size({
       showFiles: true
