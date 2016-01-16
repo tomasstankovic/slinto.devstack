@@ -139,6 +139,10 @@ gulp.task('build', function() {
   runSequence('clean', 'stylus', 'test', 'webpack', 'imagemin');
 });
 
+/**
+ *  gulp release --version major|minor|patch
+ *  gulp release -v major|minor|patch
+ */
 gulp.task('release', function() {
   VERSION = args.v || args.version;
 
@@ -152,7 +156,7 @@ gulp.task('release', function() {
 gulp.task('start-server', function() {
   nodemon({
     script: 'server/app.js',
-    exec: 'babel-node',
+    exec: 'node',
     watch: ['server/**/*.js']
   }).on('start');
 

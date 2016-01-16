@@ -1,8 +1,10 @@
 /**
  * App router.
  */
-import staticController from './controllers/staticController';
+var setup = function(app) {
+  var staticController = require('./controllers/staticController');
 
-export default (app) => {
   app.use('/', staticController);
 };
+
+module.exports.setup = setup;

@@ -1,10 +1,11 @@
 /**
  * Error handler.
  */
-const DEV_ENV = 'DEVELOPMENT';
-const CURRENT_ENV = process.env.NODE_ENV || DEV_ENV;
 
-export function setup(app) {
+var DEV_ENV = 'DEVELOPMENT',
+    CURRENT_ENV = process.env.NODE_ENV || DEV_ENV;
+
+var setup = function(app) {
 
   app.use(function(req, res, next) {
     res.render('error', {
@@ -24,3 +25,5 @@ export function setup(app) {
     });
   });
 };
+
+module.exports.setup = setup;
